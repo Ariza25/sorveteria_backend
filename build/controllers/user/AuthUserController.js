@@ -12,16 +12,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthUserController = void 0;
 const AuthUserService_1 = require("../../services/user/AuthUserService");
 class AuthUserController {
+    constructor() {
+        this.authUserService = new AuthUserService_1.AuthUserService();
+    }
     handle(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { email, password } = req.body;
-                const authUserService = new AuthUserService_1.AuthUserService();
-                const user = yield authUserService.execute({ email, password });
+                console.log(`Received login request for email: ${email}`);
+                const user = yield this.authUserService.execute({ email, password });
+                console.log(`User ${email} logged in successfully`);
                 return res.status(200).json({ message: "User logged successfully", user });
             }
             catch (error) {
-                return res.status(500).json({ error: 'An error occurred while logging user.', details: error });
+                console.error('An error occurred while logging user:', error);
+                return res.status(500).json({ error: 'An error occurred while logging user.' });
             }
         });
     }

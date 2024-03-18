@@ -13,24 +13,28 @@ exports.AuthUserService = void 0;
 const client_1 = require("@prisma/client");
 const bcrypt_1 = require("bcrypt");
 const jsonwebtoken_1 = require("jsonwebtoken");
+const prisma = new client_1.PrismaClient();
 class AuthUserService {
     execute({ email, password }) {
         return __awaiter(this, void 0, void 0, function* () {
-            const prisma = new client_1.PrismaClient();
+            console.log(`Looking for user with email: ${email}`);
             const user = yield prisma.user.findFirst({ where: { email: email } });
             if (!user) {
+                console.error(`User with email: ${email} not found`);
                 throw new Error("User not found");
             }
             if (!user.password) {
+                console.error(`Password not found for user with email: ${email}`);
                 throw new Error("Password not found");
             }
             const passwordMatch = yield (0, bcrypt_1.compare)(password, user.password);
             if (!passwordMatch) {
+                console.error(`Incorrect password for user with email: ${email}`);
                 throw new Error("Incorrect password");
             }
-            //gerar token JWT
             const secret = process.env.JWT_SECRET;
             if (!secret) {
+                console.error("JWT_SECRET is not defined");
                 throw new Error("JWT_SECRET is not defined");
             }
             const token = (0, jsonwebtoken_1.sign)({
@@ -40,6 +44,7 @@ class AuthUserService {
                 subject: user.id,
                 expiresIn: '30d'
             });
+            console.log(`User with email: ${email} logged in successfully`);
             return { id: user.id, name: user.name, email: user.email, token: token };
         });
     }
