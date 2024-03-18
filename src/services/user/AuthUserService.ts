@@ -2,6 +2,8 @@ import { PrismaClient } from "@prisma/client";
 import { compare } from "bcrypt";
 import { sign } from 'jsonwebtoken';
 
+const prisma = new PrismaClient();
+
 interface AuthRequestProps {
     email: string;
     password: string;
@@ -9,8 +11,6 @@ interface AuthRequestProps {
 
 class AuthUserService {
     async execute({ email, password}: AuthRequestProps) {
-        const prisma = new PrismaClient();
-
         console.log(`Looking for user with email: ${email}`);
         const user = await prisma.user.findFirst({ where: { email: email } });
 
@@ -31,7 +31,6 @@ class AuthUserService {
             throw new Error("Incorrect password");
         }
 
-        //gerar token JWT
         const secret = process.env.JWT_SECRET;
 
         if (!secret) {
