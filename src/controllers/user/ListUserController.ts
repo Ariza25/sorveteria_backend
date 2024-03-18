@@ -10,7 +10,7 @@ class ListUserController {
             const users = await listUserService.execute();
     
             const filteredUsers = users.map(user => {
-                const { password, confirmPassword, ...otherFields } = user;
+                const { password, ...otherFields } = user;
                 return otherFields;
             });
     

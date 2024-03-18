@@ -7,77 +7,95 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Size {
-  id   String @id @default(auto()) @map("_id") @db.ObjectId
-  name String
+model User {
+  id              String             @id @default(auto()) @map("_id") @db.ObjectId
+  name            String
+  email           String
+  password        String
+  created_at      DateTime?          @default(now())
+  updated_at      DateTime?          @default(now())
+
+  @@map("users")
 }
 
-model categories {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  created_at DateTime @db.Date
-  name       String
-  updated_at DateTime @db.Date
-}
+model Order {
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  fullName        String
+  phone           String
+  address         String
+  addressNumber   Int
+  addressDistrict String
+  addressCity     String
+  complement      String?
+  paymentMethod   String
+  cpf             String?
+  created_at      DateTime? @default(now())
+  updated_at      DateTime? @default(now())
+  products        OrderProduct[]
+  status          Boolean
+  deliveryStatus  Boolean?
+  deliveryStatusDone  Boolean?
+  finishOrder     Boolean?
+  FinalPrice      String
 
-model contacts {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  created_at DateTime @db.Date
-  email      String
-  message    String
-  name       String
-  updated_at DateTime @db.Date
+  @@map("orders")
 }
-
-model orderProducts {
-  id                 String @id @default(auto()) @map("_id") @db.ObjectId
-  UnityPrice         String
-  UnitySubTotalPrice String
-  orderId            String @db.ObjectId
-  productId          String @db.ObjectId
-  productName        String
-  quantityBought     Int
-}
-
-model orders {
-  id                 String   @id @default(auto()) @map("_id") @db.ObjectId
-  FinalPrice         String
-  address            String
-  addressCity        String
-  addressDistrict    String
-  addressNumber      Int
-  complement         String
-  cpf                String
-  created_at         DateTime @db.Date
-  deliveryStatus     Boolean
-  deliveryStatusDone Boolean
-  finishOrder        Boolean
-  fullName           String
-  paymentMethod      String
-  phone              String
-  status             Boolean
-  updated_at         DateTime @db.Date
-}
-
-model products {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  categoryId  String   @db.ObjectId
-  createdAt   DateTime @db.Date
-  description String
-  images      String[]
+model Product {
+  id          String             @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
   name        String
   price       String
   quantity    Int
-  sizeId      String   @db.ObjectId
   stock       Boolean
-  updatedAt   DateTime @db.Date
+  images      String[]
+  description String
+  category    Category           @relation(fields: [categoryId], references: [id])
+  categoryId  String             @db.ObjectId
+  sizeId      String             @db.ObjectId
+  size        Size               @relation(fields: [sizeId], references: [id])
+  orders      OrderProduct[]
+
+  @@map("products")
 }
 
-model users {
-  id              String   @id @default(auto()) @map("_id") @db.ObjectId
-  confirmPassword String
-  created_at      DateTime @db.Date
-  email           String
-  name            String
-  password        String
-  updated_at      DateTime @db.Date
+model OrderProduct {
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  productName     String
+  quantityBought  Int
+  UnityPrice      String
+  UnitySubTotalPrice      String
+  order           Order     @relation(fields: [orderId], references: [id])
+  orderId         String    @db.ObjectId
+  product         Product   @relation(fields: [productId], references: [id])
+  productId       String    @db.ObjectId
+
+  @@map("orderProducts")
+}
+
+model Category {
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  name       String
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now())
+  products   Product[]
+
+  @@map("categories")
+}
+
+model Size {
+  id       String    @id @default(auto()) @map("_id") @db.ObjectId
+  name     String
+  products Product[]
+}
+
+model Contact {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  email     String
+  message   String
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now())
+
+  @@map("contacts")
 }

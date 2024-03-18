@@ -13,7 +13,7 @@ exports.CreateUserService = void 0;
 const client_1 = require("@prisma/client");
 const bcrypt_1 = require("bcrypt");
 class CreateUserService {
-    execute({ name, email, password, confirmPassword }) {
+    execute({ name, email, password }) {
         return __awaiter(this, void 0, void 0, function* () {
             const prisma = new client_1.PrismaClient();
             const userAlreadyExists = yield prisma.user.findFirst({
@@ -24,7 +24,7 @@ class CreateUserService {
             if (userAlreadyExists) {
                 throw new Error("User already exists!");
             }
-            if (!name || !email || !password || !confirmPassword) {
+            if (!name || !email || !password) {
                 throw new Error("preencha todos os campos");
             }
             const hashedPassword = yield (0, bcrypt_1.hash)(password, 10);
@@ -34,7 +34,6 @@ class CreateUserService {
                         name,
                         email,
                         password: hashedPassword,
-                        confirmPassword: hashedPassword
                     }
                 });
                 return user;

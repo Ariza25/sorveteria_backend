@@ -15,9 +15,9 @@ class CreateUserController {
     handle(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { name, email, password, confirmPassword } = req.body;
+                const { name, email, password } = req.body;
                 const createUserService = new CreateUserService_1.CreateUserService();
-                const user = yield createUserService.execute({ name, email, password, confirmPassword });
+                const user = yield createUserService.execute({ name, email, password });
                 const userResponse = {
                     id: user.id,
                     name: user.name,

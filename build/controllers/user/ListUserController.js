@@ -29,7 +29,7 @@ class ListUserController {
                 const listUserService = new ListUserService_1.ListUserService();
                 const users = yield listUserService.execute();
                 const filteredUsers = users.map(user => {
-                    const { password, confirmPassword } = user, otherFields = __rest(user, ["password", "confirmPassword"]);
+                    const { password } = user, otherFields = __rest(user, ["password"]);
                     return otherFields;
                 });
                 return res.status(200).json(filteredUsers);
