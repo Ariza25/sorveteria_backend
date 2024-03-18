@@ -11,6 +11,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(routes);
+app.use((req, res, next) => {
+  console.log('Corpo da requisição:', req.body);
+  console.log('Cabeçalhos da requisição:', req.headers);
+  next();
+});
 
 const options = {
   definition: swaggerOptions,
