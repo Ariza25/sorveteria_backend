@@ -10,7 +10,10 @@ const storage = multer_1.default.diskStorage({
         cb(null, './uploads');
     },
     filename: function (req, file, cb) {
+        const baseUrl = process.env.BASE_URL || 'http://localhost:3333/uploads';
         const uniqueSuffix = Date.now() + path_1.default.extname(file.originalname);
+        const filename = path_1.default.join(baseUrl, uniqueSuffix);
+        cb(null, filename);
         cb(null, uniqueSuffix);
     }
 });
