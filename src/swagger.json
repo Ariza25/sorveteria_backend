@@ -1,0 +1,100 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "My API",
+    "version": "1.0.0",
+    "description": "A simple Express API",
+    "contact": {
+      "name": "Matheus Ariza",
+      "email": "mjsa.sanches25@gmail.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3333",
+      "description": "Local"
+    },
+    {
+      "url": "https://sorveteria-backend.onrender.com",
+      "description": "Production"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Products",
+      "description": "Operations related to products"
+    },
+    {
+      "name": "Categories",
+      "description": "Operations related to categories"
+    },
+    {
+      "name": "Users",
+      "description": "Operations related to users"
+    }
+  ],
+  "paths": {
+    "/v1/api/register": {
+      "post": {
+        "operationId": "registerUser",
+        "summary": "Register a new user",
+        "description": "Route responsible for registering a new user",
+        "tags": ["Users"],
+        "requestBody": {
+          "description": "User to register",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User registered successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The user's name"
+          },
+          "email": {
+            "type": "string",
+            "description": "The user's email"
+          },
+          "password": {
+            "type": "string",
+            "description": "The user's password"
+          }
+        }
+      }
+    }
+  }
+}

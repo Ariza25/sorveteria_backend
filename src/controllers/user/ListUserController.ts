@@ -16,7 +16,11 @@ class ListUserController {
     
             return res.status(200).json(filteredUsers);
         }catch(err){
-            return res.status(500).json({message: err})
+            if (err instanceof Error) {
+                return res.status(500).json({ message: err.message, name: err.name });
+            } else {
+                return res.status(500).json({ message: String(err) });
+            }
         }
     }
 }
